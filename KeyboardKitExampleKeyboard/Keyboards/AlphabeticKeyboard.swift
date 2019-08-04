@@ -6,24 +6,19 @@
 //  Copyright © 2019 Daniel Saidi. All rights reserved.
 //
 
-/*
- 
- This keyboard mimicks the English alphabetic phone keyboard.
- It does not adjust itself to other device types or language
- layouts, since its intention isn't to be a fully functional
- keyboard, but rather to show you how to make keyboards that
- behaves like the system keyboards.
- 
- */
-
 import KeyboardKit
 
+/**
+ 
+ This demo keyboard mimicks the English, alphabetic keyboard.
+ 
+ */
 struct AlphabeticKeyboard: DemoKeyboard {
     
-    init(
-        uppercased: Bool,
-        in viewController: KeyboardViewController) {
-        actions = type(of: self).actions(in: viewController, uppercased: uppercased)
+    init(uppercased: Bool, in viewController: KeyboardViewController) {
+        actions = AlphabeticKeyboard.actions(
+            uppercased: uppercased,
+            in: viewController)
     }
 
     let actions: KeyboardActionRows
@@ -31,26 +26,27 @@ struct AlphabeticKeyboard: DemoKeyboard {
 
 private extension AlphabeticKeyboard {
     
-    static var characters: [[String]] = [
+    static func actions(
+        uppercased: Bool,
+        in viewController: KeyboardViewController) -> KeyboardActionRows {
+        return KeyboardActionRows
+            .from(characters(uppercased: uppercased))
+            .addingSideActions(uppercased: uppercased)
+            .appending(bottomActions(leftmost: switchAction, for: viewController))
+    }
+    
+    static let characters: [[String]] = [
         ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
         ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
         ["z", "x", "c", "v", "b", "n", "m"]
     ]
     
-    static func actions(
-        in viewController: KeyboardViewController,
-        uppercased: Bool) -> KeyboardActionRows {
-        return characters(uppercased: uppercased)
-            .mappedToActions()
-            .addingSideActions(uppercased: uppercased)
-            .appending(bottomActions(leftmost: .switchToKeyboard(.numeric), for: viewController))
-    }
-}
-
-private extension AlphabeticKeyboard {
-    
     static func characters(uppercased: Bool) -> [[String]] {
         return uppercased ? characters.uppercased() : characters
+    }
+    
+    static var switchAction: KeyboardAction {
+        return .switchToKeyboard(.numeric)
     }
 }
 

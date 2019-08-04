@@ -1,6 +1,50 @@
 # Release Notes
 
 
+## 2.3.0
+
+This version adds autocomplete support, which includes an autocomplete suggestion provider protocol, a new toolbar and new extensions.
+
+The new `AutocompleteSuggestionProvider` protocol describes how to provide your keyboard with autocomplete suggestions. You can implement it in any way you like, e.g. to use a built-in suggestion database or by connecting to an external data source, using network requests. Note that the network option will be a lot slower and also require you to request full access from your users.
+
+The new `AutocompleteToolbar` is a toolbar that can display any results you receive from your suggestion provider (or any list of strings for that matter). Just trigger the provider anytíme the text changes and route the result to the toolbar. The toolbar can be populated with any kind of views. Have a look at the demo app for an example.
+
+The new `UITextDocumentProxy+CurrentWord` extension helps you get the word that is (most probably) being typed. You could use this when requesting autocomplete suggestions, if you only want to autocomplete the current word.
+
+Besides these additions, there are a bunch of new extensions, like `UITextDocumentProxy` `deleteBackwards(times:)`, which lets you delete a certain number of characters. Have a look at the `Extensions` namespace for a complete list.
+
+There is also a new `KeyboardShiftState` enum that you can use to keep track of which state your keyboard has, if any. This enum is extracted from demo app code that was provided by @arampak earlier this year. 
+
+ **IMPORTANT** iOS has a bug that causes `textWillChange` and `textDidChange` to not be called when the user types, only when the cursor moves. This causes autocomplete problems, since the current word is not changing as the user types. Due to this, the input view controller must use an ugly hack to force the text document proxy to update. Have a look at the demo app to see how this is done.
+
+
+## 2.2.1
+
+This version solves some major bugs in the repeating gesture recognizer and makes some `public` parts of the library `open`.
+
+The standard action handler now handles repeating actions for backspace. You can customize this in the same way as you customize tap and long press handling.
+
+You can test the new repeating logic in the demo app.
+
+
+## 2.2.0
+
+This version adds more keyboard actions that don't exist in iOS, but that may serve a functional or semantical purpose in your apps:
+
+* `command`
+* `custom(name:)`
+* `escape`
+* `function`
+* `option`
+* `tab`
+
+The new `custom` action is a fallback that you can use if the existing action set is insufficient for your specific app.
+
+I have added a `RepeatingGestureRecognizer` and an extension that you can use to apply it as well. It has a custom initial delay as well as a custom repeat interval, that will let you tap and hold a button to repeat its action. In the next update, I will apply this to the backspace and arrow buttons.
+
+Thanks to [@arampak](https://github.com/arampak), the demo app now handles shift state and long press better, to make the overall experience much nicer and close to the native keyboard. The keyboard buttons also registers tap events over the entire button area, not just the button view.
+
+
 ## 2.1.0
 
 This version makes a bunch of previously internal extensions public. It also adds a lot more unit tests so that almost all parts of the library are tested.

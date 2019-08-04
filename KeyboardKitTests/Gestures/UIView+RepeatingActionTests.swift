@@ -1,8 +1,8 @@
 //
-//  UIView+LongPressActionTests.swift
-//  KeyboardKitTests
+//  UIView+RepeatingActionTests.swift
+//  KeyboardKit
 //
-//  Created by Daniel Saidi on 2019-05-28.
+//  Created by Daniel Saidi on 2019-05-31.
 //  Copyright © 2019 Daniel Saidi. All rights reserved.
 //
 
@@ -10,31 +10,31 @@ import Quick
 import Nimble
 import KeyboardKit
 
-class UIView_LongPressActionTests: QuickSpec {
+class UIView_RepeatingActionTests: QuickSpec {
     
     override func spec() {
         
-        describe("adding long press action") {
+        describe("adding action") {
             
-            it("adds long press gesture recognizer") {
+            it("adds correct gesture recognizer") {
                 let view = UIView(frame: .zero)
                 expect(view.gestureRecognizers).to(beNil())
-                view.addLongPressAction {}
+                view.addRepeatingAction {}
                 expect(view.gestureRecognizers?.count).to(equal(1))
-                expect(view.gestureRecognizers?[0] as? UILongPressGestureRecognizer).toNot(beNil())
+                expect(view.gestureRecognizers?[0] as? RepeatingGestureRecognizer).toNot(beNil())
             }
         }
         
-        describe("removing long press action") {
+        describe("removing action") {
             
             it("removes correct gesture recognizer") {
                 let view = UIView(frame: .zero)
-                view.addTapAction {}
                 view.addLongPressAction {}
+                view.addRepeatingAction {}
                 expect(view.gestureRecognizers?.count).to(equal(2))
-                view.removeLongPressAction()
+                view.removeRepeatingAction()
                 expect(view.gestureRecognizers?.count).to(equal(1))
-                expect(view.gestureRecognizers?[0] as? UITapGestureRecognizer).toNot(beNil())
+                expect(view.gestureRecognizers?[0] as? UILongPressGestureRecognizer).toNot(beNil())
             }
         }
     }

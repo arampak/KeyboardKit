@@ -6,15 +6,13 @@
 //  Copyright © 2019 Daniel Saidi. All rights reserved.
 //
 
-/*
- 
- This keyboard mimicks the default symbolic keyboard for iOS,
- just like `AlphabeticKeyboard` mimics the alphabetic one.
- 
- */
-
 import KeyboardKit
 
+/**
+ 
+ This demo keyboard mimicks the English, symbolic keyboard.
+ 
+ */
 struct SymbolicKeyboard: DemoKeyboard {
     
     init(in viewController: KeyboardViewController) {
@@ -26,18 +24,21 @@ struct SymbolicKeyboard: DemoKeyboard {
 
 private extension SymbolicKeyboard {
     
+    static func actions(in viewController: KeyboardViewController) -> KeyboardActionRows {
+        return KeyboardActionRows
+            .from(characters)
+            .addingSideActions()
+            .appending(bottomActions(leftmost: switchAction, for: viewController))
+    }
+    
     static var characters: [[String]] = [
         ["[", "]", "{", "}", "#", "%", "^", "*", "+", "="],
         ["_", "\\", "|", "~", "<", ">", "€", "£", "¥", "•"],
         [".", ",", "?", "!", "´"]
     ]
     
-    static func actions(in viewController: KeyboardViewController) -> KeyboardActionRows {
-        let leftmost = KeyboardAction.switchToKeyboard(.alphabetic(uppercased: false))
-        return characters
-            .mappedToActions()
-            .addingSideActions()
-            .appending(bottomActions(leftmost: leftmost, for: viewController))
+    static var switchAction: KeyboardAction {
+        return .switchToKeyboard(.alphabetic(uppercased: false))
     }
 }
 

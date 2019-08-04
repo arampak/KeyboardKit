@@ -22,7 +22,7 @@ class DemoButton: KeyboardButtonView {
     
     public func setup(with action: KeyboardAction, in viewController: KeyboardInputViewController, distribution: UIStackView.Distribution = .fillEqually) {
         super.setup(with: action, in: viewController)
-        backgroundColor = .clear
+        backgroundColor = .clearTappable
         buttonView?.backgroundColor = action.buttonColor(for: viewController)
         DispatchQueue.main.async { self.image?.image = action.buttonImage }
         textLabel?.font = action.buttonFont
@@ -45,20 +45,20 @@ class DemoButton: KeyboardButtonView {
 }
 
 
-// MARK: - Private KeyboardAction Extensions
+// MARK: - Private button-specific KeyboardAction Extensions
 
 private extension KeyboardAction {
     
     func buttonColor(for viewController: KeyboardInputViewController) -> UIColor {
-        let isDarkAppearance = self.useDarkAppearance(in: viewController)
+        let dark = useDarkAppearance(in: viewController)
         let asset = useDarkButton
-            ? (isDarkAppearance ? Asset.Colors.darkSystemButton : Asset.Colors.lightSystemButton)
-            : (isDarkAppearance ? Asset.Colors.darkButton : Asset.Colors.lightButton)
+            ? (dark ? Asset.Colors.darkSystemButton : Asset.Colors.lightSystemButton)
+            : (dark ? Asset.Colors.darkButton : Asset.Colors.lightButton)
         return asset.color
     }
     
     var buttonFont: UIFont {
-        return UIFont.preferredFont(forTextStyle: buttonFontStyle)
+        return .preferredFont(forTextStyle: buttonFontStyle)
     }
     
     var buttonFontStyle: UIFont.TextStyle {
@@ -71,7 +71,7 @@ private extension KeyboardAction {
     
     var buttonImage: UIImage? {
         switch self {
-        case .image(_, let keyboardImageName, _): return UIImage(named: keyboardImageName)
+        case .image(_, let imageName, _): return UIImage(named: imageName)
         case .switchKeyboard: return Asset.Images.Buttons.switchKeyboard.image
         default: return nil
         }
@@ -89,8 +89,8 @@ private extension KeyboardAction {
         }
     }
     
-    func buttonText(for type: KeyboardType) -> String {
-        switch type {
+    func buttonText(for keyboardType: KeyboardType) -> String {
+        switch keyboardType {
         case .alphabetic: return "ABC"
         case .emojis: return "🤩"
         case .numeric: return "123"
@@ -114,10 +114,10 @@ private extension KeyboardAction {
     }
     
     func tintColor(in viewController: KeyboardInputViewController) -> UIColor {
-        let isDarkAppearance = self.useDarkAppearance(in: viewController)
+        let dark = useDarkAppearance(in: viewController)
         let asset = useDarkButton
-            ? (isDarkAppearance ? Asset.Colors.darkSystemButtonText : Asset.Colors.lightSystemButtonText)
-            : (isDarkAppearance ? Asset.Colors.darkButtonText : Asset.Colors.lightButtonText)
+            ? (dark ? Asset.Colors.darkSystemButtonText : Asset.Colors.lightSystemButtonText)
+            : (dark ? Asset.Colors.darkButtonText : Asset.Colors.lightButtonText)
         return asset.color
     }
     
